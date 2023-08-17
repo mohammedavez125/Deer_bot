@@ -1,4 +1,4 @@
-const { SlashCommandBuilder } = require("discord.js");
+const { SlashCommandBuilder, bold, spoiler } = require("discord.js");
 const fetch = require("node-fetch");
 
 const url = "https://evilinsult.com/generate_insult.php?lang=en&type=json";
@@ -10,7 +10,7 @@ module.exports = {
     .addMentionableOption((option) =>
       option
         .setName("mention")
-        .setDescription("mention the user to stfu")
+        .setDescription("mention the user to insult")
         .setRequired(true)
     ),
   async execute(interaction) {
@@ -23,11 +23,11 @@ module.exports = {
         console.error(error);
       }
     };
-
     // Call the function and save the result in a variable
     const data = await fetchData();
+    const insult = spoiler(bold(data.insult));
     const member = interaction.options.getMentionable("mention");
-    await interaction.reply(` ${member} \n ${data.insult}`);
+    await interaction.reply(` ${member} \n ${insult}`);
     // await wait(2000);
     // await interaction.deleteReply();
   },
